@@ -1,7 +1,7 @@
 import pygame.font
 
 class Buttom:
-    def __init__(self, ai_game, msg):
+    def __init__(self, ai_game, msg, x, y):
         """Initialize buttom attributes."""
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
@@ -12,9 +12,10 @@ class Buttom:
         self.text_color = (255, 255, 255)
         self.font = pygame.font.SysFont(None, 48)
 
-        # Build the button's rect object and center it.
+        # Build the button's rect object and locate it.
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.center = self.screen_rect.center
+        self.rect.x = x
+        self.rect.y = y
 
         # The button massage needs to prepped only once.
         self._prep_msg(msg)

@@ -27,7 +27,9 @@ class AlienInvasion:
 
         self._create_fleet()
 
-        self.play_button = Buttom(self, "PLAY")
+        self.easy_button = Buttom(self, "EASY", 500, 315)
+        self.medium_button = Buttom(self, "MEDIUM", 500, 375)
+        self.hard_button = Buttom(self, "HARD", 500, 435)
 
     def run_game(self):
         """Start the main loop for rhe game."""
@@ -52,12 +54,14 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
 
-        # Draw play button if the game is inactive.
+        # Draw buttons if the game is inactive.
         if not self.stats.game_active:
-            self.play_button.draw_button()
+            self.easy_button.draw_button()
+            self.medium_button.draw_button()
+            self.hard_button.draw_button()
 
     def _check_events(self):
-        """Respond to keypresses and mouse events."""
+        """Respond to key presses and mouse events."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -191,11 +195,22 @@ class AlienInvasion:
                 break
 
     def _check_play_button(self, mouse_pos):
-        """Start a new game when the player clicks play."""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.stats.game_active:
+        """Start a new game when the player clicks button."""
+        button_clicked = None
+
+        if not self.stats.game_active:
             self.settings.initialize_dynamic_setting()
-            self._start_game()
+
+            if self.easy_button.rect.collidepoint(mouse_pos):
+                button_clicked = "easy"
+            elif self.medium_button.rect.collidepoint(mouse_pos):
+                button_clicked = "medium"
+            elif self.hard_button.rect.collidepoint(mouse_pos):
+                button_clicked = "hard"
+
+            if button_clicked:
+                self.settings.select_level(button_clicked)
+                self._start_game()
 
     def _start_game(self):
         """Start game"""
