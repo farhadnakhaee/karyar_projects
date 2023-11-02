@@ -15,34 +15,39 @@ def get_deck(number_of_each_color, colors):
     return deck
 
 
-def game_logic(deck, score, first_card):
-    if not first_card:
-        first_card = deck.pop(0)
-    second_card = deck.pop(0)
-    flag = True
+def get_input(first_card):
     print("-" * 30)
     print("first card:", first_card)
     user_input = input("1. hold card\n2. pass card\n(1 or 2)\n")
+    return user_input
 
-    if user_input == "1":
-        check_hold_card(first_card, second_card, score)
-    else:
-        flag = False
-        print("second card:", second_card)
 
+def game_logic(deck, score, first_card):
+    if not first_card:
+        first_card = deck.pop()
+    user_input = get_input(first_card)
+    second_card = deck.pop()
+    score, flag = check_card(user_input, first_card, second_card, score)
+    
     if flag:
         return score, None
     else:
         return score, first_card
 
 
-def check_hold_card(first_card, second_card, score):
-    if second_card == first_card:
-        score += 1
-        print("That's Right.")
+def check_card(user_input, first_card, second_card, score):
+    flag = True
+    if user_input == "1":
+        if second_card == first_card:
+            score += 1
+            print("That's Right.")
+        else:
+            print("second card:", second_card)
+            print("You guessed wrong.")
     else:
+        flag = False
         print("second card:", second_card)
-        print("You guessed wrong.")
+    return score, flag
 
 
 def print_start_game():
