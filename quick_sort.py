@@ -1,3 +1,7 @@
+"""Implement quick sort in Python.
+Input a list.
+Output a sorted list."""
+
 def quicksort(array):
     if not array:
         return []
