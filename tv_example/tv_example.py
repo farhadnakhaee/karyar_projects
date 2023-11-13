@@ -1,77 +1,79 @@
-# decorator for volume size
-def volume_check(method):
-    def wrapper(self):
-
-        if 0 < self.volume < self.MAX_VOLUME:
-            method(self)
-        else:
-            print("Volume can't change. (max or min level)")
-
-        return self
-    return wrapper
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+        self.prv = None
 
 
-def channel_check(method):
-    def wrapper(self):
+class Channel:
+    def __init__(self, channel_list):
+        self.channel_list = channel_list
+        self.head = Node(self.channel_list.pop(0))
+        self.make_loop()
 
-        if 0 < self.currentChannelIndex < len(self.channelsList):
-            method(self)
-        else:
-            print("Channel is not in channel list")
-
-        return self
-    return wrapper
+    def make_loop(self):
+        current = self.head
+        temp = None
+        for i in self.channel_list:
+            current.next = Node(i)
+            current.prv = temp
+            temp = current
+            current = current.next
+        current.prv = temp
+        current.next = self.head
+        self.head.prv = current
 
 
 class TV:
     def __init__(self):
         self.isOn = False
         self.isMuted = False
-        self.currentChannelIndex = 0
-        self.channelsList = self.search_channel()
+        self.channel_list = self.search_channel()
+        channel = Channel(self.channel_list)
+        self.current_channel = channel.head
         self.volume = 10
         self.MAX_VOLUME = 20
 
     @staticmethod
     def search_channel():
-        # TODO: Get from CABLE!
         return [1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 21, 25]
-
-    def power(self):
-        self.isOn = not self.isOn
-
-    @volume_check
-    def volume_up(self):
-        self.volume += 1
-
-    @volume_check
-    def volume_down(self):
-        self.volume -= 1
-
-    @channel_check
-    def channel_up(self):
-        self.currentChannelIndex += 1
-
-    @channel_check
-    def channel_down(self):
-        self.currentChannelIndex -= 1
-
-    def set_channel(self):
-        channel = self.input_channel()
-        self.currentChannelIndex = self.channelsList.index(channel)
 
     @staticmethod
     def input_channel():
         channel = int(input("set channel: "))
         return channel
 
+    def power(self):
+        self.isOn = not self.isOn
+
+    def volume_up(self):
+        if self.volume < self.MAX_VOLUME:
+            self.volume += 1
+
+    def volume_down(self):
+        if self.volume > 0:
+            self.volume -= 1
+
+    def channel_up(self):
+        self.current_channel = self.current_channel.next
+
+    def channel_down(self):
+        self.current_channel = self.current_channel.prv
+
+    def set_channel(self):
+        channel = self.input_channel()
+        if channel in self.channel_list:
+            while channel != self.current_channel.value:
+                self.channel_up()
+        else:
+            print("Channel isn't in list.")
+
     def show_info(self):
         print(f"volume: {self.volume}")
-        print(f"current channel: {self.channelsList[self.currentChannelIndex]}")
+        print(f"current channel: {self.current_channel.value}")
 
 
-tv = TV()
-tv.currentChannelIndex = 1
-tv.channel_down()
-tv.channel_down()
-print(f"index: {tv.currentChannelIndex}   channel: {tv.channelsList[tv.currentChannelIndex]}")
+if __name__ == "__main__":
+    tv = TV()
+    tv.channel_up()
+    tv.show_info()
