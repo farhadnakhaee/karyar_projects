@@ -1,4 +1,13 @@
 import re
+from datetime import datetime
+
+
+def write_file(f):
+    """Decorator for writing operation."""
+    def wrapper(self, *args):
+        f(self, *args)
+        self.file.write(f"Func: {f.__name__}, Balance: {self.balance}, at {datetime.now()}\n")
+    return wrapper
 
 
 class Bank:
@@ -7,10 +16,10 @@ class Bank:
         self.last_account_number = 0
 
     @staticmethod
-    def input_menu_number():
+    def _input_menu_number():
         return input("Hello!\n\n1. Login\n2. sign up\n3. Exit\n\nEnter a number (1, 2, 3): ")
 
-    def add_accounts(self, name):
+    def add_account(self, name):
         self.last_account_number += 1
         account = Account(name, self.last_account_number)
         self.accounts[self.last_account_number] = account
@@ -30,7 +39,7 @@ class Bank:
 
     def run(self):
         while True:
-            menu_number = self.input_menu_number()
+            menu_number = self._input_menu_number()
             if menu_number == "1":
                 account_number = int(input('enter your account number: '))
                 self._login(account_number)
@@ -41,7 +50,7 @@ class Bank:
                 break
 
     def _sign_up(self, name):
-        self.add_accounts(name)
+        self.add_account(name)
         print(f"\nsign up is complete for '{name}'!")
         print(f"your account number: {self.last_account_number}")
         print(f"your password: {self.accounts[self.last_account_number].password}")
@@ -88,6 +97,7 @@ class Account:
         self.account_number = account_number
         self.balance = 0
         self._password = "1111"
+        self.file = File(account_number)
 
     @property
     def password(self):
@@ -101,14 +111,32 @@ class Account:
         else:
             print("Minimum eight characters, at least one upper letter and one number")
 
+    @write_file
     def show_info(self):
         print(f"Name: {self.name}, Account number: {self.account_number}, Balance: {self.balance}")
 
+    @write_file
     def deposit(self, value):
         self.balance += value
 
+    @write_file
     def withdraw(self, value):
         self.balance -= value
+
+
+class File:
+    def __init__(self, account_number):
+        self.account_number = account_number
+        with open(f"{account_number}.txt", "w") as f:
+            f.write(f"History for {account_number}:\n")
+
+    def write(self, data):
+        with open(f"{self.account_number}.txt", "a") as f:
+            f.write(data)
+
+    def read(self):
+        with open(f"{self.account_number}.txt", "r") as f:
+            return f.read()
 
 
 if __name__ == "__main__":
