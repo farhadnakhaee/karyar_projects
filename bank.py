@@ -1,18 +1,6 @@
 import re
 
 
-# def check_pass(f):
-#     """
-#     decorator for check password.
-#     """
-#     def wrapped(self, password, *args):
-#         if password == self.password:
-#             f(self, password, *args)
-#         else:
-#             print("password is incorrect.")
-#     return wrapped
-
-
 class Bank:
     def __init__(self):
         self.accounts = {}
