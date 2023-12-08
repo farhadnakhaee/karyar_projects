@@ -12,3 +12,7 @@ This repository is related to the practice projects that I did in Karyar, which 
 
   3. Search It: The third project is a search engine that can find a word
      or phrase both accurately and roughly in a text database.
+     
+  4. etc
+
+
