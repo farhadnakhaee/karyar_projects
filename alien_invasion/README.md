@@ -1,5 +1,6 @@
 # problem_solving
- This repo is for small project and daily problem I sovle them.
+ 
+This repo is for small project and daily problem I sovle them.
 =======
 # alien_invasion
 Alien Invasion is a classic arcade-style shooting game where the player 
