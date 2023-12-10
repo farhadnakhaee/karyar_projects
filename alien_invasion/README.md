@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # problem_solving
  This repo is for small project and daily problem I sovle them.
 =======
@@ -23,4 +22,3 @@ using Python and the Pygame library.
   This project is based on the Alien Invasion project from the book "Python 
   Crash Course" by Eric Matthes. It has been extended and modified to include 
   additional features and improvements.
->>>>>>> 1d8899f (Create README.md)
