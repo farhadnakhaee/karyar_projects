@@ -1,14 +1,13 @@
 import pygame
-from setting import Setting
+from karyar_projects.tic_tac_toe.server import setting
 
 
-class TicTacToe:
+class GameRenderer:
     def __init__(self):
         pygame.init()
-        self.setting = Setting()
+        self.setting = setting.Setting()
         self.screen = pygame.display.set_mode((self.setting.screen_height, self.setting.screen_width))
         pygame.display.set_caption("Tic Tac Toe")
-        self.board = [["X" for _ in range(3)] for _ in range(3)]
 
     def draw_grid(self):
         for i in range(1, 3):
@@ -19,12 +18,12 @@ class TicTacToe:
                              (0, i * self.setting.screen_height // 3),
                              (self.setting.screen_width, i * self.setting.screen_height // 3), 3)
 
-    def draw_shapes(self):
+    def draw_shapes(self, board):
         for row in range(3):
             for col in range(3):
-                if self.board[row][col] == "X":
+                if board[row][col] == "X":
                     self._draw_cross(row, col)
-                elif self.board[row][col] == "O":
+                elif board[row][col] == "O":
                     self._draw_circle(row, col)
 
     def _draw_circle(self, row, col):
@@ -46,12 +45,9 @@ class TicTacToe:
                          (self.setting.cell_width * row + x1, self.setting.cell_height * col + y2),
                          6)
 
-
-# tic_tac = TicTacToe()
-# tic_tac.screen.fill(tic_tac.setting.bg_color)
-# tic_tac.draw_grid()
-# tic_tac.draw_shapes()
-# pygame.display.update()
-# while True:
-#     pygame.event.pump()
+    def render(self, board):
+        self.screen.fill(self.setting.bg_color)
+        self.draw_grid()
+        self.draw_shapes(board)
+        pygame.display.update()
 
