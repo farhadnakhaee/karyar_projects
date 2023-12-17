@@ -1,11 +1,11 @@
 import pygame
-from karyar_projects.tic_tac_toe.server import setting
+from setting import Setting
 
 
 class GameRenderer:
     def __init__(self):
         pygame.init()
-        self.setting = setting.Setting()
+        self.setting = Setting()
         self.screen = pygame.display.set_mode((self.setting.screen_height, self.setting.screen_width))
         pygame.display.set_caption("Tic Tac Toe")
 

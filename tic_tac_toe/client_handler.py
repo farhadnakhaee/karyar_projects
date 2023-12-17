@@ -2,13 +2,17 @@ import json
 
 
 class ClientHandler:
-    def __init__(self):
-        self.connections = []
+    def __init__(self, connections):
+        self.connections = connections
         self.board = [["" for _ in range(3)] for _ in range(3)]
+        self.players = ["X", "O"]
+        self.send_board()
 
-    def handel_client(self, client_socket, player):
+    def handel_client(self):
+        client = self.connections[0]
+        player = self.players[0]
         while True:
-            data = client_socket.recv(1024).decode("utf-8")
+            data = client.recv(1024).decode("utf-8")
             if not data:
                 break
 
@@ -25,8 +29,9 @@ class ClientHandler:
                     print("It's tie!")
                     break
                 else:
+                    client = self.connections[1] if client == self.connections[0] else self.connections[0]
                     player = "O" if player == "X" else "X"
-
+                     
     def check_win(self, board):
         # todo: check win
         pass
@@ -36,8 +41,9 @@ class ClientHandler:
         pass
 
     def send_board(self):
-        data = json.dumps({'board': self.board})
+        print(self.connections)
         for connection in self.connections:
+            data = json.dumps({'board': self.board})
             connection.send(data.encode("utf-8"))
 
 
