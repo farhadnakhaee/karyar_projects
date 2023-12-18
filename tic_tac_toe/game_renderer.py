@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from setting import Setting
 
@@ -50,4 +52,17 @@ class GameRenderer:
         self.draw_grid()
         self.draw_shapes(board)
         pygame.display.update()
+
+    def get_action(self):
+        """I know this method should not be here but the actions of game is small."""
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    col = mouse_y // self.setting.cell_height
+                    row = mouse_x // self.setting.cell_width
+                    return row, col
 

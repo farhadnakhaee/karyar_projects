@@ -41,7 +41,9 @@ class ClientHandler:
         pass
 
     def send_board(self):
-        print(self.connections)
+        for i in self.board:
+            print(i)
+        print("==============")
         for connection in self.connections:
             data = json.dumps({'board': self.board})
             connection.send(data.encode("utf-8"))
