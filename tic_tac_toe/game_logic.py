@@ -1,26 +1,42 @@
 
 class GameLogic:
-    def __init__(self, board, connections):
-        self.board = board
+    def __init__(self, connections):
+        self.board = [["" for _ in range(3)] for _ in range(3)]
         self.connections = connections
-        self.client = None
+        self.turn = "X"
 
-    def check_win(self):
-        pass
+    def check_win(self, player):
+        # Check rows and columns
+        for i in range(3):
+            if self.board[i][0] == self.board[i][1] == self.board[i][2] == player:
+                return True
+            if self.board[0][i] == self.board[1][i] == self.board[2][i] == player:
+                return True
+        # Check diagonals
+        if self.board[0][0] == self.board[1][1] == self.board[2][2] == player:
+            return True
+        if self.board[0][2] == self.board[1][1] == self.board[2][0] == player:
+            return True
+        return False
 
     def check_tie(self):
-        pass
+        for row in self.board:
+            for cell in row:
+                if cell == '':
+                    return False
+        return True
 
     def check_game_ended(self):
         return False
 
-    def get_turn(self):
-        if self.client == self.connections["X"]:
-            self.client = self.connections["O"]
-            return self.client, "O"
+    def change_turn(self):
+        if self.turn == "X":
+            self.turn = "O"
         else:
-            self.client = self.connections["X"]
-            return self.client, "X"
+            self.turn = "X"
+
+    def get_turn(self):
+        return self.turn
 
     def update_board(self, row, col, player):
         if self.board[row][col] == "":

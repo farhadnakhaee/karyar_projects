@@ -21,10 +21,13 @@ class Server:
             self.connections[self.players[i]] = client
             print(f"connected {addr}")
 
-    def send_game_state(self, board, player):
-        for connection in self.connections.values():
-            data = json.dumps({'board': board, 'turn': player})
-            connection.send(data.encode("utf-8"))
+    def send_game_state(self, client, board, player):
+        data = json.dumps({'board': board, 'turn': player})
+        client.send(data.encode("utf-8"))
+
+    def send_massage(self, client, massage, data=None):
+        report = json.dumps({'massage': massage, "data": data})
+        client.send(report.encode("utf-8"))
 
     def send_player_symbol(self):
         for symbol, connection in self.connections.items():

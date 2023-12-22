@@ -1,33 +1,34 @@
 from client_network import Client
 from game_renderer import GameRenderer
 
-server_address = ('localhost', 8888)
-client = Client()
 
-# connect to server
-client.connect_to_server(server_address)
+class Main:
+    def __init__(self, server_address):
+        self.server_address = server_address
+        self.client = Client()
+        self.client.connect_to_server(server_address)
+        self.player_symbol = self.client.receive_player_symbol()
+        self.game_render = GameRenderer()
+        self.connected = True
 
-# receive client's symbol
-player_symbol = client.receive_player_symbol()
+    def run(self):
+        while self.connected:
+            response = self.client.get("game_state", "None", self.player_symbol)
+            board = response["board"]
+            turn = response["turn"]
+            self.game_render.render(board)
 
-# initialize GameRender
-game_render = GameRenderer()
+            move = self.game_render.get_action()
+            if move and self.player_symbol == turn:
+                response = self.client.get("move", move, self.player_symbol)
+                massage = response["massage"]
 
-connected = True
+                if massage == "YOU WIN!" or massage == "TIE!":
+                    print(massage)
+                    self.connected = False
 
-while connected:
-    # receive board / wait to receive
-    board, turn = client.receive_game_state()
 
-    # render board
-    game_render.render(board)
-
-    if player_symbol == turn:
-        # get action (mouse button position or exit)
-        row, col = game_render.get_action()
-
-        # send move
-        client.send_move(row, col)
-
-# receive results.
-# print it.
+if __name__ == "__main__":
+    server_addr = ('localhost', 8888)
+    main = Main(server_addr)
+    main.run()
