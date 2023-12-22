@@ -1,7 +1,4 @@
 import json
-import socket
-import threading
-
 from server_network import Server
 from game_logic import GameLogic
 
@@ -48,15 +45,7 @@ class Main:
         elif action == "move":
             move = data
             self.game_logic.update_board(move[0], move[1], player)
-
-            if self.game_logic.check_win(player):
-                self.server.send_massage(client, "YOU WIN!")
-                self.game_ended = True
-
-            if self.game_logic.check_tie():
-                self.server.send_massage(client, "TIE!")
-                self.game_ended = True
-
+            self.game_ended = self.game_logic.check_game_ended(self.server, client, player)
             self.game_logic.change_turn()
             self.server.send_massage(client, "move in server completed", move)
 

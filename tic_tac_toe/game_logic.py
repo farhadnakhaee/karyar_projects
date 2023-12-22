@@ -26,8 +26,14 @@ class GameLogic:
                     return False
         return True
 
-    def check_game_ended(self):
-        return False
+    def check_game_ended(self, server, client, player):
+        if self.check_win(player):
+            server.send_massage(client, "YOU WIN!")
+            return True
+
+        if self.check_tie():
+            server.send_massage(client, "TIE!")
+            return True
 
     def change_turn(self):
         if self.turn == "X":
