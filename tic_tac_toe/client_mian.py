@@ -16,7 +16,7 @@ class Main:
             response = self.client.get("game_state", "None", self.player_symbol)
             board = response["board"]
             turn = response["turn"]
-            self.game_render.render(board)
+            self.game_render.render_board(board, turn, self.player_symbol)
 
             move = self.game_render.get_action()
             if move and self.player_symbol == turn:
