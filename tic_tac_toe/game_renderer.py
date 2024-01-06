@@ -1,3 +1,4 @@
+import sys
 import pygame
 from setting import Setting
 
@@ -29,7 +30,7 @@ class GameRenderer:
     def _draw_circle(self, row, col):
         center = (self.setting.cell_width * (row + 1 / 2), self.setting.cell_height * (col + 1 / 2))
         radius = self.setting.radius_of_circle
-        pygame.draw.circle(self.screen, self.setting.circle_color, center, radius, 6)
+        pygame.draw.circle(self.screen, self.setting.circle_color, center, radius, 10)
 
     def _draw_cross(self, row, col):
         x1 = self.setting.cell_width / 4
@@ -39,15 +40,34 @@ class GameRenderer:
         pygame.draw.line(self.screen, self.setting.cross_color,
                          (self.setting.cell_width * row + x1, self.setting.cell_height * col + y1),
                          (self.setting.cell_width * row + x2, self.setting.cell_height * col + y2),
-                         6)
+                         10)
         pygame.draw.line(self.screen, self.setting.cross_color,
                          (self.setting.cell_width * row + x2, self.setting.cell_height * col + y1),
                          (self.setting.cell_width * row + x1, self.setting.cell_height * col + y2),
-                         6)
+                         10)
 
-    def render(self, board):
+    def draw_turn_light(self, color):
+        pygame.draw.circle(self.screen, color, (30, 30), 15)
+
+    def render_board(self, board, turn, player):
         self.screen.fill(self.setting.bg_color)
         self.draw_grid()
         self.draw_shapes(board)
-        pygame.display.update()
+        if turn == player:
+            self.draw_turn_light(self.setting.green)
+        else:
+            self.draw_turn_light(self.setting.red)
+        pygame.display.flip()
+
+    def get_action(self):
+        """I know this method should not be here but the actions of game is small."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                col = mouse_y // self.setting.cell_height
+                row = mouse_x // self.setting.cell_width
+                return row, col
 
