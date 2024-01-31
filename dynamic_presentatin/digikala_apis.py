@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import urlparse
 
 
 class DigikalaAPIs:
@@ -18,19 +19,21 @@ class DigikalaAPIs:
         return apis
 
     def get_section(self, user_url: str):
-        temp = user_url.split('/')
-        slug = temp[-2]
+        parse_results = urlparse(user_url)
+        section_name = parse_results.fragment
+        chapter_name = parse_results.path.split('/')[-2]
         for api in self.apis:
-            if api.endswith(slug):
+            if api.endswith(chapter_name):
                 data, status_code = self.request(api)
 
                 if status_code == 200:
                     for section in data['sections']:
-                        if section['html_id'] == temp[-1][1:]:
+                        if section['html_id'] == section_name:
                             return section
 
 
 if __name__ == "__main__":
-    user_url = "https://about.digikala.com/reports/digikala1401/digikala-customers/#aiv-per-category"
+    user_url = "https://about.digikala.com/en/reports/digikala1401/digikala-customers/#net-promoter-score"
     digi = DigikalaAPIs()
     print(digi.get_section(user_url))
+    
